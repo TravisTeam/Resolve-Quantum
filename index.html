@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResolveQuantum - Trusted Insurance Appraisals Across Canada</title>
+    <meta name="description" content="Professional insurance appraisal services across Canada. Fast, accurate, and defensible property valuations for claims and settlements.">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-black: #0a0a0a;
+            --color-dark: #1a1a1a;
+            --color-graphite: #2a2a2a;
+            --color-slate: #4a5568;
+            --color-grey: #718096;
+            --color-light-grey: #cbd5e0;
+            --color-off-white: #f7fafc;
+            --color-white: #ffffff;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+            --spacing-xl: 6rem;
+            --radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--color-dark);
+            background: var(--color-white);
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            height: 80px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--color-graphite);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-black);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--color-black);
+            color: var(--color-white);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-graphite);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        nav .btn-primary {
+            background: var(--color-black);
+            color: var(--color-white);
+        }
+
+        nav .btn-primary:hover {
+            background: var(--color-graphite);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-black);
+            border: 2px solid var(--color-black);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-black);
+            color: var(--color-white);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-black);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--color-off-white) 0%, var(--color-white) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(74, 85, 104, 0.05) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        #hero-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Interactive background canvas for multiple sections */
+        .interactive-bg {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interactive-bg canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .interactive-bg .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-30px, 30px) rotate(5deg); }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg) 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--color-black);
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.2;
+        }
+
+        .hero .tagline {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            color: var(--color-slate);
+            margin-bottom: var(--spacing-md);
+            font-weight: 500;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--color-grey);
+            max-width: 700px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .trust-bullets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .trust-item svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .trust-item span {
+            font-weight: 600;
+            color: var(--color-graphite);
+        }
+
+        /* Section Styles */
+        section {
+            padding: var(--spacing-xl) 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Service Areas Map Section */
+        #service-areas-map {
+            background: var(--color-off-white);
+            padding: var(--spacing-lg) 2rem;
+        }
+
+        #service-areas-map .section-title {
+            color: #ef4444;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-transform: none;
+            margin-bottom: 1rem;
+        }
+
+        #service-areas-map .section-title span {
+            color: #ef4444;
+        }
+
+        #map-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            min-height: 0;
+        }
+
+        #map-container svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .land {
+            fill: #2f2f2f;
+            stroke: #3a3a3a;
+            stroke-width: 0.5px;
+            pointer-events: none;
+        }
+
+        .land-context {
+            fill: #1f1f1f;
+            stroke: #2a2a2a;
+            stroke-width: 0.3px;
+            pointer-events: none;
+        }
+
+        .city-pin {
+            cursor: pointer;
+            will-change: transform;
+        }
+
+        .city-pin .pin-outer {
+            fill: #ef4444;
+            filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.5));
+        }
+
+        .city-pin .pin-inner {
+            fill: #fca5a5;
+        }
+
+        .city-pin .pulse {
+            fill: none;
+            stroke: #ef4444;
+            stroke-width: 1;
+            opacity: 0;
+            animation: pulse-ring 2.8s ease-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { r: 4; opacity: 0.5; }
+            100% { r: 18; opacity: 0; }
+        }
+
+        .city-label {
+            font-size: 10px;
+            fill: #ef4444;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        .city-label.highlight {
+            fill: #ef4444;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .map-tooltip {
+            position: fixed;
+            pointer-events: none;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 7px 14px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #f1f5f9;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+            z-index: 200;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+
+        .map-tooltip .coords {
+            font-size: 0.62rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .map-tooltip.visible { opacity: 1; }
+
+        .map-legend {
+            position: absolute;
+            bottom: 12px;
+            right: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            color: #ef4444;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+
+        #map-loading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #4a5568;
+            background: var(--color-off-white);
+            z-index: 50;
+            transition: opacity 0.4s ease;
+        }
+
+        #map-loading.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .map-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #334155;
+            border-top-color: #ef4444;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+        }
+
+        .map-credit {
+            font-size: 0.45rem;
+            color: #ef4444;
+            position: absolute;
+            bottom: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Sample Report Viewer Section */
+        #sample-report {
+            background: var(--color-white);
+        }
+
+        .report-viewer-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .report-type {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .report-total {
+            font-size: 1.125rem;
+            color: var(--color-slate);
+            font-weight: 500;
+        }
+
+        .report-description {
+            text-align: center;
+            color: var(--color-grey);
+            margin-bottom: var(--spacing-md);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .document-viewer {
+            background: var(--color-off-white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .document-display {
+            background: var(--color-white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+        }
+
+        .document-page {
+            display: none;
+            width: 100%;
+            height: auto;
+        }
+
+        .document-page.active {
+            display: block;
+        }
+
+        .viewer-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-info {
+            font-size: 0.95rem;
+            color: var(--color-slate);
+            font-weight: 500;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .nav-btn {
+            padding: 0.625rem 1.25rem;
+            background: var(--color-black);
+            color: var(--color-white);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--color-graphite);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: var(--color-light-grey);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .download-btn {
+            padding: 0.625rem 1.25rem;
+            background: transparent;
+            color: var(--color-black);
+            border: 2px solid var(--color-black);
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background: var(--color-black);
+            color: var(--color-white);
+        }
+
+        @media (max-width: 768px) {
+            .viewer-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-buttons {
+                justify-content: space-between;
+            }
+
+            .nav-btn, .download-btn {
+                flex: 1;
+            }
+        }
+
+        /* Complete Measurements Section */
+        #complete-measurements {
+            background: var(--color-off-white);
+        }
+
+        .measurements-carousel {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: var(--radius);
+            background: var(--color-white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .measurements-track {
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .measurement-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .measurement-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .measurement-label {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--color-black);
+            box-shadow: var(--shadow-md);
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            background: var(--color-white);
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--color-light-grey);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .indicator-dot.active {
+            background: var(--color-black);
+            transform: scale(1.2);
+        }
+
+        .indicator-dot:hover {
+            background: var(--color-slate);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--color-black);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--color-grey);
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto var(--spacing-lg);
+        }
+
+        /* Services Section */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid var(--color-light-grey);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.25rem;
+            color: var(--color-black);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .service-card p {
+            color: var(--color-grey);
+            line-height: 1.7;
+        }
+
+        .service-card.clickable-card {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .service-card.clickable-card:hover {
+            border-color: var(--color-black);
+        }
+
+        .card-cta {
+            margin-top: 1rem;
+            color: var(--color-black);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Why Choose Section */
+        #why-choose {
+            background: var(--color-off-white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+        }
+
+        .feature-item h3 {
+            font-size: 1.125rem;
+            color: var(--color-black);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .feature-item p {
+            color: var(--color-grey);
+        }
+
+        /* Process Section */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--color-black);
+            color: var(--color-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .process-step h3 {
+            font-size: 1rem;
+            color: var(--color-black);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Industries Section */
+        #industries {
+            background: var(--color-off-white);
+        }
+
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .industry-item {
+            background: var(--color-white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--color-black);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .industry-item:hover {
+            transform: translateX(5px);
+        }
+
+        .industry-item p {
+            color: var(--color-graphite);
+            font-weight: 500;
+        }
+
+        /* Testimonials Section */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .testimonial-carousel {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .testimonial-slide {
+            min-width: 100%;
+            padding: 0 1rem;
+        }
+
+        .testimonial-card {
+            background: var(--color-white);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .testimonial-card p {
+            color: var(--color-graphite);
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        /* FAQ Section */
+        #faq {
+            background: var(--color-off-white);
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--color-white);
+            margin-bottom: 1rem;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem;
+            background: var(--color-white);
+            border: none;
+            text-align: left;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-black);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: var(--color-off-white);
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .faq-question.active::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-answer.active {
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--color-grey);
+            line-height: 1.7;
+        }
+
+        /* Contact Section */
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .contact-info h3 {
+            font-size: 1.5rem;
+            color: var(--color-black);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .contact-details {
+            margin-bottom: 2rem;
+        }
+
+        .contact-detail {
+            margin-bottom: 1rem;
+        }
+
+        .contact-detail strong {
+            color: var(--color-black);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-detail span {
+            color: var(--color-grey);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--color-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.875rem;
+            border: 2px solid var(--color-light-grey);
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-black);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .success-message {
+            display: none;
+            background: var(--color-black);
+            color: var(--color-white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success-message.visible {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-black);
+            color: var(--color-light-grey);
+            padding: 3rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.875rem;
+            color: var(--color-grey);
+            margin-top: 1rem;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--color-black);
+            color: var(--color-white);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .back-to-top:hover {
+            background: var(--color-graphite);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                min-height: 70vh;
+                margin-top: 70px;
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            section {
+                padding: var(--spacing-lg) 1.5rem;
+            }
+
+            .testimonials-grid,
+            .services-grid,
+            .industries-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .trust-bullets {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="logo.png" alt="ResolveQuantum Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="#industries">Industries</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#contact" class="btn btn-primary">Request an Appraisal</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1>ResolveQuantum</h1>
+            <p class="tagline">Trusted Insurance Appraisals Across Canada</p>
+            <p>We deliver fast, accurate, and defensible property appraisal services for insurance claims and settlements. Our expert team combines technical precision with clear reporting to support your claims, underwriting decisions, and dispute resolution.</p>
+            <div class="hero-ctas">
+                <a href="#contact" class="btn btn-primary">Request an Appraisal</a>
+                <a href="#services" class="btn btn-secondary">View Services</a>
+            </div>
+            <div class="trust-bullets">
+                <div class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Defensible reporting</span>
+                </div>
+                <div class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span>Prompt turnaround</span>
+                </div>
+                <div class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+                    </svg>
+                    <span>Canada-wide service</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Areas Map Section -->
+    <section id="service-areas-map">
+        <div class="container">
+            <h2 class="section-title">Our Service Areas</h2>
+            <div id="map-container">
+                <svg id="map"></svg>
+                <div class="map-tooltip" id="tooltip">
+                    <div class="name"></div>
+                    <div class="coords"></div>
+                </div>
+                <div class="map-legend">
+                    <div class="legend-dot"></div>
+                    Service Locations
+                </div>
+                <div class="map-credit">Data: Natural Earth via world-atlas</div>
+            </div>
+        </div>
+        <div id="map-loading">
+            <div class="map-spinner"></div>
+            Loading map data...
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <h3>Insurance Appraisal Reports</h3>
+                    <p>Comprehensive property valuations prepared specifically for insurance claims, providing defensible assessments that meet industry standards.</p>
+                </div>
+                <div class="service-card clickable-card" data-scroll-to="property-assessments">
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <h3>Property Condition Assessments</h3>
+                    <p>Detailed evaluations of property condition to support underwriting decisions and identify potential risks.</p>
+                    <div class="card-cta">View Assessment Examples →</div>
+                </div>
+                <div class="service-card clickable-card" data-scroll-to="complete-measurements">
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    <h3>Complete Measurements</h3>
+                    <p>Comprehensive property measurement documentation including detailed front elevations, roof measurements, and window schedules for accurate insurance appraisals.</p>
+                    <div class="card-cta">View Measurement Examples →</div>
+                </div>
+                <div class="service-card">
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                    </svg>
+                    <h3>Dispute and Litigation Support</h3>
+                    <p>Expert testimony and robust documentation to support claim disputes and legal proceedings.</p>
+                </div>
+                <div class="service-card">
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                    <h3>Consultation and Advisory Services</h3>
+                    <p>Strategic guidance on property valuation matters, risk assessment, and claims management processes.</p>
+                </div>
+                <div class="service-card clickable-card" data-scroll-to="sample-report">
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        <path d="M9 12h6m-6 4h6"/>
+                    </svg>
+                    <h3>Cost Estimates</h3>
+                    <p>Provides expert cost consulting services tailored to meet the evolving needs of our clients. With precise evaluations and timely deliverables, we deliver accurate cost estimates, competitive solutions, and scalable support to ensure efficient project management and cost control.</p>
+                    <div class="card-cta">View Sample Estimate →</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Report Section -->
+    <section id="sample-report" class="interactive-bg">
+        <canvas class="section-canvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Sample Appraisal Report</h2>
+            <div class="report-viewer-container">
+                <div class="report-header">
+                    <div class="report-type">Water Damage Claim - Sample Estimate</div>
+                    <div class="report-total">Estimate Total: $6,110.64</div>
+                </div>
+                <p class="report-description">
+                    This sample demonstrates our comprehensive appraisal methodology. Navigate through the pages to see detailed line-item breakdowns, room-by-room analysis, and professional documentation standards.
+                </p>
+                <div class="document-viewer">
+                    <div class="document-display">
+                        <img src="sample-page-1.jpg" alt="Report Page 1" class="document-page active">
+                        <img src="sample-page-2.jpg" alt="Report Page 2" class="document-page">
+                        <img src="sample-page-3.jpg" alt="Report Page 3" class="document-page">
+                        <img src="sample-page-4.jpg" alt="Report Page 4" class="document-page">
+                        <img src="sample-page-5.jpg" alt="Report Page 5" class="document-page">
+                        <img src="sample-page-6.jpg" alt="Report Page 6" class="document-page">
+                        <img src="sample-page-7.jpg" alt="Report Page 7" class="document-page">
+                    </div>
+                    <div class="viewer-controls">
+                        <div class="page-info">
+                            Page <span id="current-page">1</span> of <span id="total-pages">7</span>
+                        </div>
+                        <div class="nav-buttons">
+                            <button class="nav-btn" id="prev-btn" disabled>← Previous</button>
+                            <button class="nav-btn" id="next-btn">Next →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Property Condition Assessments Section -->
+    <section id="property-assessments" class="interactive-bg">
+        <canvas class="section-canvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Property Condition Assessments</h2>
+            <p class="section-subtitle">
+                Our comprehensive property assessments document existing conditions, identify potential issues, and provide detailed photographic evidence for insurance underwriting and claims support.
+            </p>
+            <div class="measurements-carousel">
+                <div class="measurements-track" id="property-track">
+                    <div class="measurement-slide">
+                        <img src="condition-1.jpg" alt="Fire Damage Exterior Assessment">
+                        <div class="measurement-label">Fire Damage - Exterior</div>
+                    </div>
+                    <div class="measurement-slide">
+                        <img src="condition-2.jpg" alt="Water Damage Ceiling Assessment">
+                        <div class="measurement-label">Water Damage - Ceiling</div>
+                    </div>
+                    <div class="measurement-slide">
+                        <img src="condition-3.jpg" alt="Mold Inspection">
+                        <div class="measurement-label">Mold Inspection</div>
+                    </div>
+                    <div class="measurement-slide">
+                        <img src="condition-4.jpg" alt="Moisture Testing">
+                        <div class="measurement-label">Moisture Testing</div>
+                    </div>
+                    <div class="measurement-slide">
+                        <img src="condition-5.jpg" alt="Fire Damage Ceiling Structure">
+                        <div class="measurement-label">Fire Damage - Ceiling Structure</div>
+                    </div>
+                    <div class="measurement-slide">
+                        <img src="condition-6.png" alt="Fire Damage Basement Ceiling">
+                        <div class="measurement-label">Fire Damage - Basement Ceiling</div>
+                    </div>
+                </div>
+                <div class="carousel-indicators" id="property-indicators">
+                    <div class="indicator-dot active" data-slide="0"></div>
+                    <div class="indicator-dot" data-slide="1"></div>
+                    <div class="indicator-dot" data-slide="2"></div>
+                    <div class="indicator-dot" data-slide="3"></div>
+                    <div class="indicator-dot" data-slide="4"></div>
+                    <div class="indicator-dot" data-slide="5"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Complete Measurements Section -->
+    <section id="complete-measurements">
+        <div class="container">
+            <h2 class="section-title">Complete Measurements</h2>
+            <p class="section-subtitle">
+                Our comprehensive measurement services provide precise documentation for insurance appraisals, including detailed front elevations, roof measurements, and window schedules.
+            </p>
+            <div class="measurements-carousel">
+                <div class="measurements-track" id="measurements-track">
+                    <div class="measurement-slide">
+                        <img src="measurement-1.png" alt="Front Elevation Measurements">
+                        <div class="measurement-label">Front Elevation</div>
+                    </div>
+                    <div class="measurement-slide">
+                        <img src="measurement-2.png" alt="Roof Measurements">
+                        <div class="measurement-label">Roof Measurements</div>
+                    </div>
+                    <div class="measurement-slide">
+                        <img src="measurement-3.png" alt="Window Schedule">
+                        <div class="measurement-label">Window Schedule</div>
+                    </div>
+                </div>
+                <div class="carousel-indicators">
+                    <div class="indicator-dot active" data-slide="0"></div>
+                    <div class="indicator-dot" data-slide="1"></div>
+                    <div class="indicator-dot" data-slide="2"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Section -->
+    <section id="why-choose">
+        <div class="container">
+            <h2 class="section-title">Why Choose ResolveQuantum</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>Canadian Focused Expertise</h3>
+                    <p>Deep understanding of Canadian insurance markets, building codes, and regional property characteristics.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Technically Robust Reporting</h3>
+                    <p>Detailed, defensible reports that withstand scrutiny and meet the highest professional standards.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Prompt Turnaround</h3>
+                    <p>Efficient processes that deliver comprehensive appraisals without unnecessary delays.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Transparent Pricing</h3>
+                    <p>Clear, upfront pricing with no hidden fees or surprises.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Client-Centric Approach</h3>
+                    <p>Responsive communication and tailored service to meet your specific needs and timelines.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="interactive-bg">
+        <canvas class="section-canvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Our Process</h2>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>Initial Consultation</h3>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>Site Inspection or Virtual Evaluation</h3>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>Analysis and Valuation</h3>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>Detailed Report Delivery</h3>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h3>Follow-Up Support</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries Section -->
+    <section id="industries">
+        <div class="container">
+            <h2 class="section-title">Industries We Serve</h2>
+            <div class="industries-grid">
+                <div class="industry-item">
+                    <p>Residential property claims and settlements</p>
+                </div>
+                <div class="industry-item">
+                    <p>Commercial real estate appraisal</p>
+                </div>
+                <div class="industry-item">
+                    <p>Condominium and strata properties</p>
+                </div>
+                <div class="industry-item">
+                    <p>Industrial facilities and warehouses</p>
+                </div>
+                <div class="industry-item">
+                    <p>Retail and mixed-use buildings</p>
+                </div>
+                <div class="industry-item">
+                    <p>Municipal and public sector properties</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="interactive-bg">
+        <canvas class="section-canvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">What Our Clients Say</h2>
+            <div class="testimonial-carousel">
+                <div class="testimonial-track">
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p>"ResolveQuantum provided a fast and defensible appraisal that helped us settle the claim efficiently. Professional and thorough."</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p>"Their team explained every step of the process and delivered a report that stood up to our underwriting review."</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p>"The level of detail in their property assessment was impressive. They identified issues we hadn't even considered."</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p>"Excellent turnaround time without compromising on quality. Their reports are always comprehensive and well-documented."</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p>"We've worked with ResolveQuantum on multiple claims across different provinces. Consistently reliable service every time."</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p>"Their expertise in dispute resolution saved us significant time and money. The technical analysis was invaluable."</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p>"Clear communication, transparent pricing, and exceptional attention to detail. Exactly what we needed for our commercial property assessment."</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p>"The team's understanding of Canadian building codes and regional variations made all the difference in our appraisal. Highly recommend."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        What is an insurance appraisal?
+                    </button>
+                    <div class="faq-answer">
+                        <p>An insurance appraisal is a professional assessment of a property's value or damage, prepared specifically to support insurance claims, underwriting decisions, or dispute resolution. It provides an objective, defensible valuation based on industry standards and methodologies.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        How soon can you deliver a report?
+                    </button>
+                    <div class="faq-answer">
+                        <p>Turnaround times vary depending on the complexity of the property and scope of work. Most standard residential appraisals are completed within 5-7 business days. For urgent matters, we offer expedited service. Contact us to discuss your specific timeline requirements.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        Do you serve clients outside Ontario?
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, we provide appraisal services across Canada. Our team has experience with properties in all provinces and territories, and we understand regional variations in building practices, codes, and market conditions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="interactive-bg">
+        <canvas class="section-canvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <div class="contact-details">
+                        <div class="contact-detail">
+                            <strong>Phone - Calgary</strong>
+                            <span>403-697-2447</span>
+                        </div>
+                        <div class="contact-detail">
+                            <strong>Phone - Toronto</strong>
+                            <span>416-502-6005</span>
+                        </div>
+                        <div class="contact-detail">
+                            <strong>Email</strong>
+                            <span>resolvequantum@traviscollective.ca</span>
+                        </div>
+                        <div class="contact-detail">
+                            <strong>Service Areas</strong>
+                            <span>Our offices are located across Canada:<br>
+                            Victoria, Vancouver, Calgary, Edmonton, Saskatoon, Regina, Winnipeg, Thunder Bay, Toronto, Ottawa, Halifax, and St. John's</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Name *</label>
+                            <input type="text" id="name" name="name" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone (optional)</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" required aria-required="true"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                    <div class="success-message" id="successMessage">
+                        Thank you! Your message has been received. We'll get back to you shortly.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; <span id="currentYear"></span> ResolveQuantum. All rights reserved.</p>
+            <p class="footer-disclaimer">Information on this website is for general purposes only and does not constitute legal advice.</p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Interactive Dot Background for Hero Section
+        const heroCanvas = document.getElementById('hero-canvas');
+        const heroCtx = heroCanvas.getContext('2d');
+        const heroSection = document.querySelector('.hero');
+
+        const heroState = {
+            w: 0,
+            h: 0,
+            dpr: Math.max(1, Math.min(2, window.devicePixelRatio || 1)),
+            mouseX: -99999,
+            mouseY: -99999,
+            particles: []
+        };
+
+        function resizeHeroCanvas() {
+            const rect = heroSection.getBoundingClientRect();
+            heroState.w = rect.width;
+            heroState.h = rect.height;
+
+            heroCanvas.width = Math.floor(heroState.w * heroState.dpr);
+            heroCanvas.height = Math.floor(heroState.h * heroState.dpr);
+            heroCanvas.style.width = heroState.w + 'px';
+            heroCanvas.style.height = heroState.h + 'px';
+
+            heroCtx.setTransform(heroState.dpr, 0, 0, heroState.dpr, 0, 0);
+
+            buildHeroParticles();
+        }
+
+        function buildHeroParticles() {
+            heroState.particles = [];
+
+            const spacing = 28;
+
+            const cols = Math.ceil(heroState.w / spacing);
+            const rows = Math.ceil(heroState.h / spacing);
+
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    const baseX = x * spacing;
+                    const baseY = y * spacing;
+
+                    heroState.particles.push({
+                        baseX,
+                        baseY,
+                        x: baseX,
+                        y: baseY,
+                        vx: 0,
+                        vy: 0,
+                        r: 1.6 + Math.random() * 0.8,
+                        a: 0.12 + Math.random() * 0.18
+                    });
+                }
+            }
+        }
+
+        function onHeroMouseMove(e) {
+            const rect = heroSection.getBoundingClientRect();
+            heroState.mouseX = e.clientX - rect.left;
+            heroState.mouseY = e.clientY - rect.top;
+        }
+
+        function onHeroMouseLeave() {
+            heroState.mouseX = -99999;
+            heroState.mouseY = -99999;
+        }
+
+        heroSection.addEventListener('mousemove', onHeroMouseMove);
+        heroSection.addEventListener('mouseleave', onHeroMouseLeave);
+
+        function stepHero() {
+            heroCtx.clearRect(0, 0, heroState.w, heroState.h);
+
+            const influenceRadius = 140;
+            const influenceRadius2 = influenceRadius * influenceRadius;
+
+            const strength = 900;
+            const returnForce = 0.02;
+            const damping = 0.86;
+
+            for (const p of heroState.particles) {
+                const dxm = p.x - heroState.mouseX;
+                const dym = p.y - heroState.mouseY;
+                const d2 = dxm * dxm + dym * dym;
+
+                if (d2 < influenceRadius2) {
+                    const d = Math.sqrt(d2) || 0.001;
+                    const t = 1 - d / influenceRadius;
+                    const push = strength * t * t;
+
+                    p.vx += (dxm / d) * push * 0.001;
+                    p.vy += (dym / d) * push * 0.001;
+                }
+
+                const dx = p.baseX - p.x;
+                const dy = p.baseY - p.y;
+                p.vx += dx * returnForce;
+                p.vy += dy * returnForce;
+
+                p.vx *= damping;
+                p.vy *= damping;
+
+                p.x += p.vx;
+                p.y += p.vy;
+
+                heroCtx.globalAlpha = p.a;
+                heroCtx.beginPath();
+                heroCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                heroCtx.fillStyle = '#c0c0c0';
+                heroCtx.fill();
+            }
+
+            requestAnimationFrame(stepHero);
+        }
+
+        // Initialize hero canvas
+        resizeHeroCanvas();
+        stepHero();
+
+        // Re-resize on window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(resizeHeroCanvas, 100);
+        });
+
+        // Interactive backgrounds for other sections
+        function createInteractiveBackground(section, canvas) {
+            const ctx = canvas.getContext('2d');
+            
+            const state = {
+                w: 0,
+                h: 0,
+                dpr: Math.max(1, Math.min(2, window.devicePixelRatio || 1)),
+                mouseX: -99999,
+                mouseY: -99999,
+                particles: []
+            };
+
+            function resize() {
+                const rect = section.getBoundingClientRect();
+                state.w = rect.width;
+                state.h = rect.height;
+
+                canvas.width = Math.floor(state.w * state.dpr);
+                canvas.height = Math.floor(state.h * state.dpr);
+                canvas.style.width = state.w + 'px';
+                canvas.style.height = state.h + 'px';
+
+                ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+
+                buildParticles();
+            }
+
+            function buildParticles() {
+                state.particles = [];
+
+                const spacing = 28;
+
+                const cols = Math.ceil(state.w / spacing);
+                const rows = Math.ceil(state.h / spacing);
+
+                for (let y = 0; y < rows; y++) {
+                    for (let x = 0; x < cols; x++) {
+                        const baseX = x * spacing;
+                        const baseY = y * spacing;
+
+                        state.particles.push({
+                            baseX,
+                            baseY,
+                            x: baseX,
+                            y: baseY,
+                            vx: 0,
+                            vy: 0,
+                            r: 1.6 + Math.random() * 0.8,
+                            a: 0.12 + Math.random() * 0.18
+                        });
+                    }
+                }
+            }
+
+            function onMouseMove(e) {
+                const rect = section.getBoundingClientRect();
+                state.mouseX = e.clientX - rect.left;
+                state.mouseY = e.clientY - rect.top;
+            }
+
+            function onMouseLeave() {
+                state.mouseX = -99999;
+                state.mouseY = -99999;
+            }
+
+            section.addEventListener('mousemove', onMouseMove);
+            section.addEventListener('mouseleave', onMouseLeave);
+
+            function step() {
+                ctx.clearRect(0, 0, state.w, state.h);
+
+                const influenceRadius = 140;
+                const influenceRadius2 = influenceRadius * influenceRadius;
+
+                const strength = 900;
+                const returnForce = 0.02;
+                const damping = 0.86;
+
+                for (const p of state.particles) {
+                    const dxm = p.x - state.mouseX;
+                    const dym = p.y - state.mouseY;
+                    const d2 = dxm * dxm + dym * dym;
+
+                    if (d2 < influenceRadius2) {
+                        const d = Math.sqrt(d2) || 0.001;
+                        const t = 1 - d / influenceRadius;
+                        const push = strength * t * t;
+
+                        p.vx += (dxm / d) * push * 0.001;
+                        p.vy += (dym / d) * push * 0.001;
+                    }
+
+                    const dx = p.baseX - p.x;
+                    const dy = p.baseY - p.y;
+                    p.vx += dx * returnForce;
+                    p.vy += dy * returnForce;
+
+                    p.vx *= damping;
+                    p.vy *= damping;
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    ctx.globalAlpha = p.a;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = '#c0c0c0';
+                    ctx.fill();
+                }
+
+                requestAnimationFrame(step);
+            }
+
+            resize();
+            step();
+
+            return resize;
+        }
+
+        // Initialize interactive backgrounds for all marked sections
+        const interactiveSections = document.querySelectorAll('.interactive-bg');
+        const resizeFunctions = [];
+        
+        interactiveSections.forEach(section => {
+            const canvas = section.querySelector('.section-canvas');
+            if (canvas) {
+                const resizeFn = createInteractiveBackground(section, canvas);
+                resizeFunctions.push(resizeFn);
+            }
+        });
+
+        // Re-resize all sections on window resize
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                resizeFunctions.forEach(fn => fn());
+            }, 100);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const wasActive = button.classList.contains('active');
+                
+                // Close all FAQ items
+                document.querySelectorAll('.faq-question').forEach(q => {
+                    q.classList.remove('active');
+                    q.setAttribute('aria-expanded', 'false');
+                });
+                document.querySelectorAll('.faq-answer').forEach(a => {
+                    a.classList.remove('active');
+                });
+
+                // Open clicked item if it wasn't already open
+                if (!wasActive) {
+                    button.classList.add('active');
+                    button.setAttribute('aria-expanded', 'true');
+                    button.nextElementSibling.classList.add('active');
+                }
+            });
+        });
+
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                message: document.getElementById('message').value
+            };
+
+            console.log('Form submission:', formData);
+
+            // Hide form and show success message
+            document.getElementById('contactForm').style.display = 'none';
+            document.getElementById('successMessage').classList.add('visible');
+
+            // Reset form after 5 seconds and show it again
+            setTimeout(() => {
+                document.getElementById('contactForm').reset();
+                document.getElementById('contactForm').style.display = 'flex';
+                document.getElementById('successMessage').classList.remove('visible');
+            }, 5000);
+        });
+
+        // Back to Top Button
+        const backToTopBtn = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Mobile menu toggle (basic implementation)
+        document.querySelector('.mobile-menu-btn').addEventListener('click', () => {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks.style.display === 'flex') {
+                navLinks.style.display = 'none';
+            } else {
+                navLinks.style.display = 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = 'white';
+                navLinks.style.padding = '1rem';
+                navLinks.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+            }
+        });
+
+        // Testimonial Carousel
+        let currentTestimonial = 0;
+        const testimonialTrack = document.querySelector('.testimonial-track');
+        const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+        const totalTestimonials = testimonialSlides.length;
+
+        function rotateTestimonials() {
+            currentTestimonial = (currentTestimonial + 1) % totalTestimonials;
+            const offset = -currentTestimonial * 100;
+            testimonialTrack.style.transform = `translateX(${offset}%)`;
+        }
+
+        // Auto-rotate every 5 seconds
+        setInterval(rotateTestimonials, 5000);
+
+        // Interactive Service Areas Map
+        (async function() {
+            const cities = [
+                { name: "Victoria",        lat: 48.4284, lon: -123.3656, island: true },
+                { name: "Campbell River",  lat: 50.0244, lon: -125.2475, island: true },
+                { name: "Vancouver",       lat: 49.2827, lon: -123.1207, highlight: true },
+            ];
+
+            if (typeof d3 === 'undefined') {
+                console.warn('D3.js not loaded, skipping map');
+                document.getElementById('map-loading').innerHTML = 'Map unavailable (D3.js required)';
+                return;
+            }
+
+            const tooltip = document.getElementById('tooltip');
+            const container = document.getElementById('map-container');
+            const svgEl = d3.select('#map');
+
+            let worldData;
+            try {
+                const resp = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json');
+                worldData = await resp.json();
+            } catch(e) {
+                try {
+                    const resp = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+                    worldData = await resp.json();
+                } catch(e2) {
+                    document.getElementById('map-loading').innerHTML = 'Failed to load map data.';
+                    return;
+                }
+            }
+
+            const countries = topojson.feature(worldData, worldData.objects.countries);
+            const canada = countries.features.find(f => f.id === '124');
+            const usa = countries.features.find(f => f.id === '840');
+            if (!canada) { document.getElementById('map-loading').innerHTML = 'Map error.'; return; }
+
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            svgEl.attr('viewBox', `0 0 ${w} ${h}`);
+
+            const geoWest = -128.5, geoEast = -122.6, geoSouth = 48.0, geoNorth = 51.0;
+
+            function mercY(lat) {
+                return -Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2));
+            }
+
+            const yMin = mercY(geoNorth);
+            const yMax = mercY(geoSouth);
+            const xMin = geoWest * Math.PI / 180;
+            const xMax = geoEast * Math.PI / 180;
+
+            const geoW = xMax - xMin;
+            const geoH = yMax - yMin;
+
+            const scale = Math.min(w / geoW, h / geoH) * 0.95;
+            const xOffset = (w - geoW * scale) / 2 - xMin * scale;
+            const yOffset = (h - geoH * scale) / 2 - yMin * scale;
+
+            const projection = d3.geoMercator()
+                .scale(scale)
+                .translate([xOffset, yOffset]);
+
+            const path = d3.geoPath().projection(projection);
+
+            svgEl.append('defs').append('clipPath').attr('id', 'map-clip')
+                .append('rect').attr('width', w).attr('height', h);
+
+            svgEl.append('rect').attr('width', w).attr('height', h).attr('fill', '#f7fafc');
+
+            const mapGroup = svgEl.append('g').attr('clip-path', 'url(#map-clip)');
+
+            if (usa) {
+                mapGroup.append('path').datum(usa).attr('d', path).attr('class', 'land-context');
+            }
+
+            mapGroup.append('path').datum(canada).attr('d', path).attr('class', 'land');
+
+            const pinGroup = mapGroup.append('g');
+
+            // Coastline labels
+            mapGroup.append('text')
+                .attr('x', w * 0.18)
+                .attr('y', h * 0.45)
+                .attr('fill', '#cbd5e0')
+                .attr('font-size', '22')
+                .attr('font-weight', '600')
+                .attr('opacity', '0.6')
+                .text('Vancouver Island');
+
+            mapGroup.append('text')
+                .attr('x', w * 0.62)
+                .attr('y', h * 0.25)
+                .attr('fill', '#cbd5e0')
+                .attr('font-size', '20')
+                .attr('font-weight', '600')
+                .attr('opacity', '0.6')
+                .text('BC Coast');
+
+            mapGroup.append('text')
+                .attr('x', w * 0.62)
+                .attr('y', h * 0.75)
+                .attr('fill', '#cbd5e0')
+                .attr('font-size', '20')
+                .attr('font-weight', '600')
+                .attr('opacity', '0.6')
+                .text('US Coast');
+
+            cities.forEach((city, i) => {
+                const coords = projection([city.lon, city.lat]);
+                if (!coords) return;
+                const [x, y] = coords;
+
+                const outerR = city.highlight ? 8 : 6;
+                const innerR = city.highlight ? 3 : 2.2;
+
+                const g = pinGroup.append('g')
+                    .attr('class', 'city-pin')
+                    .attr('transform', `translate(${x}, ${y})`)
+                    .style('opacity', 0);
+
+                g.append('circle')
+                    .attr('class', 'pulse')
+                    .attr('cx', 0).attr('cy', 0).attr('r', 4)
+                    .style('animation-delay', `${i * 200}ms`);
+
+                g.append('circle')
+                    .attr('class', 'pin-outer')
+                    .attr('cx', 0).attr('cy', 0).attr('r', outerR);
+
+                g.append('circle')
+                    .attr('class', 'pin-inner')
+                    .attr('cx', 0).attr('cy', 0).attr('r', innerR);
+
+                let lx = 14, ly = 4;
+                const n = city.name;
+                if (n === 'Victoria')       { lx = 14;  ly = 16; }
+                if (n === 'Vancouver')      { lx = 14;  ly = 5; }
+                if (n === 'Campbell River') { lx = 14;  ly = -12; }
+
+                g.append('text')
+                    .attr('class', 'city-label' + (city.highlight ? ' highlight' : ''))
+                    .attr('x', lx)
+                    .attr('y', ly)
+                    .text(n);
+
+                g.on('mouseenter', () => {
+                    g.select('.pin-outer').transition().duration(150).attr('r', outerR + 2.5);
+                    g.select('.pin-inner').transition().duration(150).attr('r', innerR + 1);
+
+                    tooltip.querySelector('.name').textContent = n + (city.island ? ', Vancouver Island' : ', BC');
+                    tooltip.querySelector('.coords').textContent =
+                        `${Math.abs(city.lat).toFixed(4)}°N, ${Math.abs(city.lon).toFixed(4)}°W`;
+
+                    const svgRect = svgEl.node().getBoundingClientRect();
+                    const scaleX = svgRect.width / w;
+                    const scaleY = svgRect.height / h;
+
+                    let tipLeft = (svgRect.left + x * scaleX - 70);
+                    let tipTop = (svgRect.top + y * scaleY - 48);
+
+                    // keep tooltip in viewport
+                    const tipWidth = 160;
+                    const tipHeight = 42;
+                    const margin = 8;
+                    if (tipLeft < margin) tipLeft = margin;
+                    if (tipLeft + tipWidth > window.innerWidth - margin) tipLeft = window.innerWidth - tipWidth - margin;
+                    if (tipTop < margin) tipTop = svgRect.top + y * scaleY + 18;
+
+                    tooltip.style.left = tipLeft + 'px';
+                    tooltip.style.top = tipTop + 'px';
+                    tooltip.classList.add('visible');
+                });
+
+                g.on('mouseleave', () => {
+                    g.select('.pin-outer').transition().duration(150).attr('r', outerR);
+                    g.select('.pin-inner').transition().duration(150).attr('r', innerR);
+                    tooltip.classList.remove('visible');
+                });
+
+                setTimeout(() => {
+                    g.transition().duration(400)
+                        .ease(d3.easeBackOut.overshoot(1.5))
+                        .style('opacity', 1);
+                }, 300 + i * 70);
+            });
+
+            document.getElementById('map-loading').classList.add('hide');
+        })();
+
+        // Sample Report Viewer
+        let currentPage = 1;
+        const totalPages = 7;
+        const pages = document.querySelectorAll('.document-page');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentPageSpan = document.getElementById('current-page');
+
+        function updatePage() {
+            // Hide all pages
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show current page
+            pages[currentPage - 1].classList.add('active');
+            
+            // Update page counter
+            currentPageSpan.textContent = currentPage;
+            
+            // Update button states
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePage();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePage();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentPage > 1) {
+                currentPage--;
+                updatePage();
+            } else if (e.key === 'ArrowRight' && currentPage < totalPages) {
+                currentPage++;
+                updatePage();
+            }
+        });
+
+        // Clickable service card navigation
+        document.querySelectorAll('.clickable-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const targetId = card.getAttribute('data-scroll-to');
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Complete Measurements Carousel
+        let currentMeasurement = 0;
+        const measurementTrack = document.querySelector('#measurements-track');
+        const measurementSlides = document.querySelectorAll('#measurements-track .measurement-slide');
+        const indicatorDots = document.querySelectorAll('#complete-measurements .indicator-dot');
+        const totalMeasurements = measurementSlides.length;
+
+        function updateMeasurementCarousel(index) {
+            currentMeasurement = index;
+            const offset = -currentMeasurement * 100;
+            measurementTrack.style.transform = `translateX(${offset}%)`;
+            
+            // Update indicator dots
+            indicatorDots.forEach((dot, i) => {
+                if (i === currentMeasurement) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function nextMeasurement() {
+            const next = (currentMeasurement + 1) % totalMeasurements;
+            updateMeasurementCarousel(next);
+        }
+
+        // Auto-rotate every 6 seconds
+        setInterval(nextMeasurement, 6000);
+
+        // Click indicators to jump to specific slide
+        indicatorDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                updateMeasurementCarousel(index);
+            });
+        });
+
+        // Property Assessments Carousel
+        let currentProperty = 0;
+        const propertyTrack = document.querySelector('#property-track');
+        const propertySlides = document.querySelectorAll('#property-track .measurement-slide');
+        const propertyDots = document.querySelectorAll('#property-indicators .indicator-dot');
+        const totalProperty = propertySlides.length;
+
+        function updatePropertyCarousel(index) {
+            currentProperty = index;
+            const offset = -currentProperty * 100;
+            propertyTrack.style.transform = `translateX(${offset}%)`;
+            
+            // Update indicator dots
+            propertyDots.forEach((dot, i) => {
+                if (i === currentProperty) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function nextProperty() {
+            const next = (currentProperty + 1) % totalProperty;
+            updatePropertyCarousel(next);
+        }
+
+        // Auto-rotate every 6 seconds
+        setInterval(nextProperty, 6000);
+
+        // Click indicators to jump to specific slide
+        propertyDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                updatePropertyCarousel(index);
+            });
+        });
+    </script>
+</body>
+</html>
