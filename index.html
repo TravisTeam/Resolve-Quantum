@@ -2087,8 +2087,8 @@
 
             // Coastline labels
             mapGroup.append('text')
-                .attr('x', w * 0.18)
-                .attr('y', h * 0.45)
+                .attr('x', w * 0.48)
+                .attr('y', h * 0.58)
                 .attr('fill', '#cbd5e0')
                 .attr('font-size', '22')
                 .attr('font-weight', '600')
@@ -2096,22 +2096,22 @@
                 .text('Vancouver Island');
 
             mapGroup.append('text')
-                .attr('x', w * 0.62)
-                .attr('y', h * 0.25)
+                .attr('x', w * 0.72)
+                .attr('y', h * 0.32)
                 .attr('fill', '#cbd5e0')
                 .attr('font-size', '20')
                 .attr('font-weight', '600')
                 .attr('opacity', '0.6')
-                .text('BC Coast');
+                .text('British Columbia');
 
             mapGroup.append('text')
-                .attr('x', w * 0.62)
-                .attr('y', h * 0.75)
+                .attr('x', w * 0.86)
+                .attr('y', h * 0.82)
                 .attr('fill', '#cbd5e0')
                 .attr('font-size', '20')
                 .attr('font-weight', '600')
                 .attr('opacity', '0.6')
-                .text('US Coast');
+                .text('Washington');
 
             cities.forEach((city, i) => {
                 const coords = projection([city.lon, city.lat]);
