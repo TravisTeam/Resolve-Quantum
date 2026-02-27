@@ -474,12 +474,13 @@
         }
 
         .report-description {
-            text-align: center;
+            text-align: left;
             color: var(--color-grey);
             margin-bottom: var(--spacing-md);
-            max-width: 700px;
+            max-width: 860px;
             margin-left: auto;
             margin-right: auto;
+            line-height: 1.8;
         }
 
         .document-viewer {
@@ -712,6 +713,52 @@
             line-height: 1.7;
         }
 
+        .service-card .service-label {
+            font-weight: 600;
+            color: var(--color-black);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .service-list {
+            margin: 0;
+            padding-left: 1.2rem;
+            color: var(--color-grey);
+            line-height: 1.6;
+        }
+
+        .service-list li {
+            margin-bottom: 0.35rem;
+        }
+
+        .mini-card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .mini-card {
+            background: var(--color-white);
+            border: 1px solid var(--color-light-grey);
+            border-radius: var(--radius);
+            padding: 0.85rem 1.25rem;
+            box-shadow: var(--shadow-sm);
+            color: var(--color-grey);
+        }
+
+        .about-photo {
+            width: 280px;
+            height: 280px;
+            border-radius: var(--radius);
+            object-fit: cover;
+            box-shadow: var(--shadow-md);
+            display: block;
+            margin: 0 auto 1.5rem;
+            border: 1px solid var(--color-light-grey);
+        }
+
         .service-card.clickable-card {
             cursor: pointer;
             position: relative;
@@ -729,6 +776,85 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        .variant-title {
+            margin: 2.5rem 0 1rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--color-black);
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .timeline-step {
+            background: var(--color-white);
+            border: 1px solid var(--color-light-grey);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .timeline-step .step-number {
+            font-weight: 700;
+            color: var(--color-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .icon-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .icon-item {
+            text-align: left;
+            padding: 1rem 0;
+        }
+
+        .icon-item svg {
+            width: 36px;
+            height: 36px;
+            margin-bottom: 0.75rem;
+        }
+
+        .accordion {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .accordion details {
+            border: 1px solid var(--color-light-grey);
+            border-radius: var(--radius);
+            background: var(--color-white);
+            padding: 1rem 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .accordion summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--color-black);
+            list-style: none;
+        }
+
+        .accordion summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .accordion summary::after {
+            content: "＋";
+            float: right;
+            color: var(--color-grey);
+        }
+
+        .accordion details[open] summary::after {
+            content: "–";
         }
 
         /* Why Choose Section */
@@ -985,6 +1111,8 @@
             font-family: inherit;
             font-size: 1rem;
             transition: var(--transition);
+            background: var(--color-white);
+            color: var(--color-dark);
         }
 
         .form-group input:focus,
@@ -1105,6 +1233,10 @@
             .industries-grid {
                 grid-template-columns: 1fr;
             }
+
+            #aerial-drone-analysis .services-grid {
+                grid-template-columns: 1fr !important;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1124,10 +1256,11 @@
     <header>
         <nav>
             <div class="logo">
-                <img src="assets/images/logo.png" alt="ResolveQuantum Logo">
+                <img src="assets/images/logo-light.png" alt="ResolveQuantum Logo">
             </div>
             <ul class="nav-links">
                 <li><a href="#services">Services</a></li>
+                <li><a href="#about-us">About Us</a></li>
                 <li><a href="#process">Process</a></li>
                 <li><a href="#industries">Industries</a></li>
                 <li><a href="#faq">FAQ</a></li>
@@ -1208,6 +1341,23 @@
                     <h3>Insurance Appraisal Reports</h3>
                     <p>Comprehensive property valuations prepared specifically for insurance claims, providing defensible assessments that meet industry standards.</p>
                 </div>
+                <div class="service-card clickable-card" data-scroll-to="rcv-acv-analysis">
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.768 0-1.536-.22-2.121-.659-1.172-.879-1.172-2.303 0-3.182 1.171-.879 3.07-.879 4.242 0l.879.659" />
+                    </svg>
+                    <h3>RCV and ACV Cost Analysis</h3>
+                    <p>Independent RCV/ACV assessments for claims, appraisals, and portfolio decisions.</p>
+                    <div class="card-cta">View details →</div>
+                </div>
+                <div class="service-card clickable-card" data-scroll-to="demolition-rfq">
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 7h18M6 7v10a2 2 0 002 2h8a2 2 0 002-2V7"/>
+                        <path d="M9 11h6M9 15h6"/>
+                    </svg>
+                    <h3>Demolition Scope and RFQ Advisory</h3>
+                    <p>Structured demolition scoping and RFQ support to reduce scope ambiguity and produce comparable pricing.</p>
+                    <div class="card-cta">View details →</div>
+                </div>
                 <div class="service-card clickable-card" data-scroll-to="property-assessments">
                     <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
@@ -1220,9 +1370,18 @@
                     <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                     </svg>
-                    <h3>Complete Measurements</h3>
-                    <p>Comprehensive property measurement documentation including detailed front elevations, roof measurements, and window schedules for accurate insurance appraisals.</p>
+                    <h3>Complete Measurement and Digital Capture</h3>
+                    <p>Integrated exterior and interior capture using Hover and DocuSketch to deliver scalable, insurance-ready building data.</p>
                     <div class="card-cta">View Measurement Examples →</div>
+                </div>
+                <div class="service-card clickable-card" data-scroll-to="aerial-drone-analysis">
+                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12l2-2m0 0l7-7 7 7"/>
+                        <path d="M5 10v10a1 1 0 001 1h3"/>
+                    </svg>
+                    <h3>Drone Assessment</h3>
+                    <p>UAV-based aerial capture for roof, exterior, and site documentation in complex or inaccessible areas.</p>
+                    <div class="card-cta">View Drone Assessment →</div>
                 </div>
                 <div class="service-card">
                     <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1243,10 +1402,92 @@
                         <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                         <path d="M9 12h6m-6 4h6"/>
                     </svg>
-                    <h3>Cost Estimates</h3>
-                    <p>Provides expert cost consulting services tailored to meet the evolving needs of our clients. With precise evaluations and timely deliverables, we deliver accurate cost estimates, competitive solutions, and scalable support to ensure efficient project management and cost control.</p>
+                    <h3>Repair and Reconstruction Cost Estimates</h3>
+                    <p>Independent repair and rebuild cost estimates structured for insurance, legal, and capital planning use.</p>
                     <div class="card-cta">View Sample Estimate →</div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RCV & ACV Cost Analysis Section -->
+    <section id="rcv-acv-analysis" class="interactive-bg">
+        <canvas class="section-canvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">RCV and ACV Cost Analysis</h2>
+            <p class="section-subtitle" style="text-align: left; max-width: 860px; margin-left: auto; margin-right: auto;">
+                Independent Replacement Cost Value and Actual Cash Value assessments prepared to support insurance claims, appraisal processes, and portfolio level decision making. Analyses can range from rapid high level screening to more developed cost opinions depending on file requirements and complexity.
+            </p>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>What is included</h3>
+                    <ul class="service-list">
+                        <li>RCV and ACV calculations</li>
+                        <li>High level or ROM cost modeling where appropriate</li>
+                        <li>Budget reserve commentary when requested</li>
+                        <li>Measurement and costing summary suitable for insurance workflows</li>
+                        <li>Depreciation logic clearly documented</li>
+                        <li>Key quantity assumptions identified</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>Recommended Applications</h3>
+                    <p>Insurance claims, appraisal and umpire matters, underwriting review, large loss files, and portfolio screening where an independent cost position is required.</p>
+                </div>
+            </div>
+            <div class="services-grid" style="margin-top: 2rem;">
+                <div class="service-card">
+                    <h3>How the analysis is developed</h3>
+                    <p>Each RCV and ACV assessment is prepared using current construction cost data, verified building measurements, and scope based quantity modeling. Where file conditions require, rapid ROM screening can be completed prior to more developed cost analysis.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Typical report outputs</h3>
+                    <ul class="service-list">
+                        <li>Replacement Cost Value summary</li>
+                        <li>Actual Cash Value calculation</li>
+                        <li>ROM or high level cost model where applicable</li>
+                        <li>Measurement basis and quantity summary</li>
+                        <li>Optional reserve or sensitivity commentary</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>Why insurers use Resolve Quantum</h3>
+                    <ul class="service-list">
+                        <li>Independent third party cost position</li>
+                        <li>Structured for appraisal and dispute environments</li>
+                        <li>Scalable from rapid screening to detailed review</li>
+                        <li>Designed to support defensible claim decisions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demolition Scope and RFQ Advisory Section -->
+    <section id="demolition-rfq" class="interactive-bg">
+        <canvas class="section-canvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Demolition Scope and RFQ Advisory</h2>
+            <p class="section-subtitle" style="text-align: left; max-width: 860px; margin-left: auto; margin-right: auto;">
+                Structured demolition scoping and contractor procurement support designed to produce comparable pricing and reduce scope ambiguity. Services include scope development, RFQ preparation, and independent bid review with recommendation.
+            </p>
+            <div class="accordion">
+                <details open>
+                    <summary>Scope Development</summary>
+                    <p>Demolition scope of work with defined inclusions and exclusions.</p>
+                </details>
+                <details>
+                    <summary>RFQ Package</summary>
+                    <p>Contractor‑ready RFQ with submission requirements and schedule alignment.</p>
+                </details>
+                <details>
+                    <summary>Bid Review</summary>
+                    <p>Normalized comparison with an independent recommendation report.</p>
+                </details>
+                <details>
+                    <summary>Recommended Applications</summary>
+                    <p>Large loss files, complex strip out projects, and insurer directed tendering.</p>
+                </details>
             </div>
         </div>
     </section>
@@ -1255,15 +1496,24 @@
     <section id="sample-report" class="interactive-bg">
         <canvas class="section-canvas"></canvas>
         <div class="container">
-            <h2 class="section-title">Sample Appraisal Report</h2>
+            <h2 class="section-title">Repair and Reconstruction Cost Estimates</h2>
             <div class="report-viewer-container">
                 <div class="report-header">
                     <div class="report-type">Water Damage Claim - Sample Estimate</div>
                     <div class="report-total">Estimate Total: $6,110.64</div>
                 </div>
                 <p class="report-description">
-                    This sample demonstrates our comprehensive appraisal methodology. Navigate through the pages to see detailed line-item breakdowns, room-by-room analysis, and professional documentation standards.
+                    Independent cost estimates prepared for repair, partial reconstruction, or full rebuild scenarios. Estimates are structured for insurance, legal, and capital planning applications and can be scaled from preliminary control estimates to more developed cost opinions.
                 </p>
+                <p class="report-description" style="margin-top: 1rem;">
+                    Resolve Quantum can also provide targeted control estimates to support scope validation and financial oversight, including:
+                </p>
+                <div class="mini-card-grid" style="margin-bottom: 2rem;">
+                    <div class="mini-card">Demolition control estimates</div>
+                    <div class="mini-card">Repair control estimates</div>
+                    <div class="mini-card">Reconstruction cost modeling</div>
+                    <div class="mini-card">Cost reasonableness reviews where contractor pricing is available</div>
+                </div>
                 <div class="document-viewer">
                     <div class="document-display">
                         <img src="assets/images/sample-page-1.jpg" alt="Report Page 1" class="document-page active">
@@ -1285,6 +1535,58 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Aerial Drone Analysis Section -->
+    <section id="aerial-drone-analysis" class="interactive-bg">
+        <canvas class="section-canvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Drone Assessment</h2>
+            <div class="service-card" style="padding: 0; overflow: hidden; max-width: 1000px; margin: 0 auto 1.5rem;">
+                <div style="position: relative; padding-top: 56.25%;">
+                    <iframe
+                        src="https://player.vimeo.com/video/1168717110"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowfullscreen
+                        title="Aerial Drone Analysis Video"
+                    ></iframe>
+                </div>
+            </div>
+            <p class="section-subtitle" style="text-align: left; max-width: 900px; margin: 0 auto 2rem;">
+                Resolve Quantum utilizes UAV technology to capture high resolution aerial data in support of insurance, engineering, and property condition workflows. Drone deployments provide rapid site visibility and detailed roof and exterior documentation for complex or inaccessible areas.
+            </p>
+            <div class="services-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem;">
+                <div class="service-card">
+                    <h3>Capabilities</h3>
+                    <ul class="service-list">
+                        <li>High resolution aerial overviews</li>
+                        <li>Roof condition documentation</li>
+                        <li>Oblique and vertical imaging</li>
+                        <li>Site wide context imagery</li>
+                        <li>360 capture where required</li>
+                        <li>Pre loss and post loss documentation</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>Recommended applications</h3>
+                    <ul class="service-list">
+                        <li>Large loss and catastrophe files</li>
+                        <li>Complex or steep roof systems</li>
+                        <li>Multi building sites and campuses</li>
+                        <li>Inaccessible or safety restricted areas</li>
+                        <li>Progress documentation and condition baselines</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="service-card" style="margin-top: 1.5rem;">
+                <h3>Team capability</h3>
+                <p>Our team includes more than five licensed UAV pilots, enabling fast deployment across multiple regions and support for time sensitive assignments. Operations follow applicable aviation requirements and site safety protocols.</p>
+            </div>
+            <p class="section-subtitle" style="text-align: center; max-width: 900px; margin: 1.25rem auto 0; font-size: 0.95rem;">
+                For aerial deployment availability or file specific requirements, please contact Resolve Quantum.
+            </p>
         </div>
     </section>
 
@@ -1338,11 +1640,56 @@
     <!-- Complete Measurements Section -->
     <section id="complete-measurements">
         <div class="container">
-            <h2 class="section-title">Complete Measurements</h2>
-            <p class="section-subtitle">
-                Our comprehensive measurement services provide precise documentation for insurance appraisals, including detailed front elevations, roof measurements, and window schedules.
+            <h2 class="section-title">Complete Measurement and Digital Capture</h2>
+            <p class="section-subtitle" style="text-align: left; max-width: 900px; margin-left: auto; margin-right: auto;">
+                Resolve Quantum provides an integrated measurement workflow combining advanced exterior capture and interior digital walkthrough technology. Using Hover for exterior geometry and DocuSketch for interior documentation, our team delivers accurate, scalable building data to support insurance, engineering, and reconstruction workflows.
             </p>
-            <div class="measurements-carousel">
+            <div class="services-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem;">
+                <div class="service-card">
+                    <h3>Exterior Measurement Using Hover</h3>
+                    <p>Hover technology is used to generate AI assisted exterior measurements, roof geometry, and elevation data. This allows rapid capture of complex structures and supports consistent quantity development for estimating and claim documentation.</p>
+                    <ul class="service-list">
+                        <li>AI assisted roof measurements</li>
+                        <li>Exterior elevation data</li>
+                        <li>Building footprint and geometry</li>
+                        <li>Rapid capture for complex roof systems</li>
+                        <li>Data suitable for insurance estimating workflows</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>Interior Documentation Using DocuSketch</h3>
+                    <p>DocuSketch walkthroughs provide immersive interior documentation and schematic floor plan development. This supports clear loss documentation, scope validation, and improved file transparency for insurers and stakeholders.</p>
+                    <ul class="service-list">
+                        <li>360 interior walkthroughs</li>
+                        <li>Schematic floor plans</li>
+                        <li>Room level documentation</li>
+                        <li>Pre loss and post loss capture</li>
+                        <li>Support for scope validation</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="margin: 2rem 0;">
+                <h3 class="section-title" style="font-size: 1.25rem;">Integrated Measurement Workflow</h3>
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <h3>Exterior capture using Hover</h3>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <h3>Interior walkthrough using DocuSketch</h3>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <h3>Quantity and geometry validation</h3>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <h3>Insurance ready measurement outputs</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="measurements-carousel" style="margin: 2rem auto;">
                 <div class="measurements-track" id="measurements-track">
                     <div class="measurement-slide">
                         <img src="assets/images/measurement-1.png" alt="Front Elevation Measurements">
@@ -1363,6 +1710,30 @@
                     <div class="indicator-dot" data-slide="2"></div>
                 </div>
             </div>
+            <div class="service-card">
+                <h3>Recommended Applications</h3>
+                <div class="mini-card-grid" style="margin-top: 0.75rem;">
+                    <div class="mini-card">Insurance loss documentation</div>
+                    <div class="mini-card">Large and complex properties</div>
+                    <div class="mini-card">Multi unit residential buildings</div>
+                    <div class="mini-card">Commercial property assessments</div>
+                    <div class="mini-card">Reconstruction and estimating support</div>
+                </div>
+            </div>
+            <p class="section-subtitle" style="text-align: center; max-width: 900px; margin: 1.25rem auto 0; font-size: 0.95rem;">
+                For measurement coordination or file specific requirements, please contact Resolve Quantum.
+            </p>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about-us">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <img src="assets/images/about-derek.jpg" alt="Derek Firth" class="about-photo">
+            <p class="section-subtitle" style="text-align: left; max-width: 900px; margin: 0 auto;">
+                Resolve Quantum provides independent insurance valuation and technical reporting services across Canada, supporting carriers, adjusters, and stakeholders with clear, defensible documentation. Our work combines field expertise with structured reporting to help decision‑makers move files forward efficiently and confidently. <strong>This will be updated with Derek’s new CV and cover photo — Derek Firth, HCI‑R/C.</strong>
+            </p>
         </div>
     </section>
 
@@ -1527,10 +1898,10 @@
                 </div>
                 <div class="faq-item">
                     <button class="faq-question" aria-expanded="false">
-                        Do you serve clients outside Ontario?
+                        Do you serve clients outside of Vancouver Island?
                     </button>
                     <div class="faq-answer">
-                        <p>Yes, we provide appraisal services across Canada. Our team has experience with properties in all provinces and territories, and we understand regional variations in building practices, codes, and market conditions.</p>
+                        <p>Yes. We have inspectors across the country, including Calgary, Edmonton, Toronto, and Niagara Falls, and provide appraisal services nationwide.</p>
                     </div>
                 </div>
             </div>
@@ -1547,16 +1918,12 @@
                     <h3>Contact Information</h3>
                     <div class="contact-details">
                         <div class="contact-detail">
-                            <strong>Phone - Calgary</strong>
-                            <span>403-697-2447</span>
-                        </div>
-                        <div class="contact-detail">
-                            <strong>Phone - Toronto</strong>
-                            <span>416-502-6005</span>
+                            <strong>Phone - Vancouver</strong>
+                            <span>258-959-381</span>
                         </div>
                         <div class="contact-detail">
                             <strong>Email</strong>
-                            <span>resolvequantum@traviscollective.ca</span>
+                            <span>Admin@resolvequantum.ca</span>
                         </div>
                         <div class="contact-detail">
                             <strong>Service Areas</strong>
