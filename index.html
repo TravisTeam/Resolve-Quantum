@@ -2424,11 +2424,11 @@
 
             let worldData;
             try {
-                const resp = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json');
+                const resp = await fetch('assets/data/countries-50m.json');
                 worldData = await resp.json();
             } catch(e) {
                 try {
-                    const resp = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+                    const resp = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json');
                     worldData = await resp.json();
                 } catch(e2) {
                     document.getElementById('map-loading').innerHTML = 'Failed to load map data.';
