@@ -1071,6 +1071,29 @@
             margin: 0 auto;
         }
 
+        #contact .contact-wrapper {
+            grid-template-columns: minmax(160px, 0.3fr) minmax(780px, 3.4fr);
+            max-width: 1240px;
+            align-items: start;
+            justify-content: center;
+        }
+
+        #contact .contact-info {
+            max-width: 340px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        #contact .contact-form-embed {
+            max-width: 1060px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #contact .contact-form-embed iframe {
+            min-width: 780px;
+        }
+
         .contact-info h3 {
             font-size: 1.5rem;
             color: var(--color-black);
@@ -1285,7 +1308,6 @@
     <section class="hero">
         <canvas id="hero-canvas"></canvas>
         <div class="hero-content">
-            <p class="tagline" style="font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase; color: #c53030;">🏗️ Website in beta · Official launch March 14, 2026</p>
             <h1>Resolve Quantum</h1>
             <p class="tagline">Trusted Insurance Appraisals Across Canada</p>
             <p>We deliver fast, accurate, and defensible property appraisal services for insurance claims and settlements. Our expert team combines technical precision with clear reporting to support your claims, underwriting decisions, and dispute resolution.</p>
@@ -1954,29 +1976,17 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <form class="contact-form" id="contactForm">
-                        <div class="form-group">
-                            <label for="name">Name *</label>
-                            <input type="text" id="name" name="name" required aria-required="true">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email *</label>
-                            <input type="email" id="email" name="email" required aria-required="true">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone (optional)</label>
-                            <input type="tel" id="phone" name="phone">
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message *</label>
-                            <textarea id="message" name="message" required aria-required="true"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
-                    </form>
-                    <div class="success-message" id="successMessage">
-                        Thank you! Your message has been received. We'll get back to you shortly.
-                    </div>
+                <div class="service-card contact-form-embed" style="padding: 0; overflow: hidden;">
+                    <iframe
+                        src="https://docs.google.com/forms/d/e/1FAIpQLScR81uzhKdHttSCENhsz_W3NgYd00K8EOBOwPRDHRStZAGamA/viewform?embedded=true"
+                        width="100%"
+                        height="1050"
+                        frameborder="0"
+                        marginheight="0"
+                        marginwidth="0"
+                        title="Resolve Quantum Contact Form"
+                        style="border: 0; display: block;"
+                    >Loading…</iframe>
                 </div>
             </div>
         </div>
