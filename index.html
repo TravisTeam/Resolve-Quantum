@@ -1292,7 +1292,8 @@
                 grid-template-columns: 1fr;
             }
 
-            #aerial-drone-analysis .services-grid {
+            #aerial-drone-analysis .services-grid,
+            #digital-twins .services-grid {
                 grid-template-columns: 1fr !important;
             }
         }
@@ -1642,12 +1643,60 @@
                     </ul>
                 </div>
             </div>
-            <div class="service-card" style="margin-top: 1.5rem;">
-                <h3>Team capability</h3>
-                <p>Our team includes more than five licensed UAV pilots, enabling fast deployment across multiple regions and support for time sensitive assignments. Operations follow applicable aviation requirements and site safety protocols.</p>
-            </div>
             <p class="section-subtitle" style="text-align: center; max-width: 900px; margin: 1.25rem auto 0; font-size: 0.95rem;">
                 For aerial deployment availability or file specific requirements, please contact Resolve Quantum.
+            </p>
+        </div>
+    </section>
+
+    <!-- 3D Scanning and Digital Twins Section -->
+    <section id="digital-twins" class="interactive-bg">
+        <canvas class="section-canvas"></canvas>
+        <div class="container">
+            <h2 class="section-title service-section-title">3D Scanning and Digital Twins</h2>
+            <p class="section-subtitle" style="text-align: center; max-width: 900px; margin: 0 auto 1rem; font-size: 0.95rem;">
+                3D model — click and drag to rotate, scroll to zoom.
+            </p>
+            <div class="service-card" style="padding: 0; overflow: hidden; max-width: 1000px; margin: 0 auto 1.5rem;">
+                <div style="position: relative; padding-top: 56.25%;">
+                    <iframe
+                        src="https://3dviewer.dji.com/s/728e22c6-cbd7-43b2-9ca7-07b488242ecb"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        loading="lazy"
+                        allow="fullscreen; xr-spatial-tracking"
+                        allowfullscreen
+                        title="3D Model — Fire Loss, Comox Valley"
+                    ></iframe>
+                </div>
+            </div>
+            <p class="section-subtitle" style="text-align: left; max-width: 900px; margin: 0 auto 2rem;">
+                We capture high-resolution 3D models of structures, sites, and scenes using photogrammetry and advanced scanning technology. Our digital twins provide accurate, navigable records for forensic documentation, structural diagnostics, insurance claims, and expert testimony.
+            </p>
+            <div class="services-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem;">
+                <div class="service-card">
+                    <h3>Capabilities</h3>
+                    <ul class="service-list">
+                        <li>Photogrammetric mesh and point cloud capture</li>
+                        <li>Measurable, scaled site geometry</li>
+                        <li>Full exterior and structural documentation</li>
+                        <li>Navigable digital twins of the loss site</li>
+                        <li>Preservation of scene conditions before remediation</li>
+                        <li>Integration with drone and interior capture data</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <h3>Recommended applications</h3>
+                    <ul class="service-list">
+                        <li>Fire and large loss investigations</li>
+                        <li>Forensic scene documentation</li>
+                        <li>Structural diagnostics and failure analysis</li>
+                        <li>Insurance claim substantiation</li>
+                        <li>Expert testimony and litigation support</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="section-subtitle" style="text-align: center; max-width: 900px; margin: 1.25rem auto 0; font-size: 0.95rem;">
+                The model above documents a recent fire loss captured in the Comox Valley, British Columbia.
             </p>
         </div>
     </section>
